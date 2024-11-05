@@ -1,6 +1,7 @@
+import 'package:benu_app/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'hero/hero_screen.dart';
+// import 'hero/hero_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -18,6 +19,6 @@ class MainApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HeroScreen());
+        home: const HomeScreen());
   }
 }
