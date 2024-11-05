@@ -1,8 +1,6 @@
 import 'package:benu_app/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
-// import 'hero/hero_screen.dart';
-
 void main() {
   runApp(const MainApp());
 }
