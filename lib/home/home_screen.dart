@@ -141,74 +141,80 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16),
-          //   child: Container(
-          //     decoration: const BoxDecoration(color: Colors.pink),
-          //     child: GridView.builder(
-          //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          //           crossAxisCount: 2, // 2 items per row
-          //           crossAxisSpacing: 8.0,
-          //           mainAxisSpacing: 8.0,
-          //           childAspectRatio: 3 / 2,
-          //         ), // Adjust based on desired item aspect ratio,
-          //         itemCount: 8,
-          //         itemBuilder: (context, index) {
-          //           return CardBarang();
-          //         }),
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: sH * .6,
+              child: GridView.builder(
+                itemCount: 15,
+                itemBuilder: (_, index) => const CardBarang(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: .8
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-// class CardBarang extends StatelessWidget {
-//   // const CardBarang({super.key});
+class CardBarang extends StatelessWidget {
+  const CardBarang({
+    super.key,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-//       clipBehavior: Clip.antiAlias,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Expanded(
-//               child: Image.network(
-//             'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.hellostore.id%2Fproducts%2Fiphone-15-plus&psig=AOvVaw1eXs3e5k4RYEjbNU_r_E-7&ust=1730927303665000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNj99-qMxokDFQAAAAAdAAAAABAE',
-//             fit: BoxFit.cover,
-//             width: double.infinity,
-//           )),
-//           Padding(
-//             padding: const EdgeInsets.all(8),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   'Iphone 15',
-//                   style: GoogleFonts.inter(
-//                     fontSize: 14,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 const Text('Dalam Kenangan Indah'),
-//                 const Row(
-//                   children: [
-//                     CircleAvatar(
-//                       backgroundImage: AssetImage(
-//                           'assets/images/profile_image.png'), // Replace with your image asset path
-//                     ),
-//                     Spacer(),
-//                     Icon(Icons.location_on, color: Colors.teal),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox( height: 100,
+      child: Column(
+        children: [
+          Image.asset(
+            'assets/images/barang1.png',
+            fit: BoxFit.fill,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Kamera Canon',
+                style: GoogleFonts.inter(
+                    fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Ditemukan di toilet kantin',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                ),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage(
+                        'assets/images/profile_image.png'), // Replace with your image asset path
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Icon(
+                        Icons.location_on,
+                        size: 45,
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
