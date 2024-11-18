@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+import 'cardbarang.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,149 +19,126 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _showDetailsModal(String title, String description, String imagePath) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.inter(
+                    fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Image.asset(imagePath, fit: BoxFit.cover),
+              const SizedBox(height: 10),
+              Text(
+                description,
+                style: GoogleFonts.inter(fontSize: 16),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double sW = MediaQuery.of(context).size.width;
     double sH = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:
-            const Size.fromHeight(80.0), // Adjust the height as needed
-        child: AppBar(
-          leadingWidth: 80,
-          backgroundColor: const Color(0xff006769),
-          elevation: 0,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30.0),
-              bottomRight: Radius.circular(30.0),
-            ),
-          ),
-          leading: Container(
-            margin: const EdgeInsets.only(left: 10, right: 5, top: 5),
-            child: const CircleAvatar(
-              backgroundImage: AssetImage(
-                  'assets/images/profile_image.png'), // Replace with your image asset path
-            ),
-          ),
-          title: SizedBox(
-            width: sW * .6,
-            // width: 300,
-            child: Text(
-              "Hi, Izi!",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          centerTitle: true,
-        ),
-      ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              //search bar
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 4),
-                child: SizedBox(
-                  height: sH * .075,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xffeeeeee),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: Image.asset("assets/images/search_icon.png"),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "Temukan barang kamu!",
-                                hintStyle: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  color: const Color(0xffbbbbbb),
-                                ),
-                                border: InputBorder.none,
-                              ),
-                              style: GoogleFonts.inter(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+    return SafeArea(
+      child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize:
+                Size.fromHeight(sH * .075), // Adjust the height as needed
+            child: AppBar(
+              backgroundColor: const Color(0xff006769),
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30.0),
+                  bottomRight: Radius.circular(30.0),
                 ),
               ),
-
-              //welcome message
-              AnimatedSize(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInBack,
-                child: AnimatedOpacity(
-                  opacity: _isWelcomeMessageVisible ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: _isWelcomeMessageVisible
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, bottom: 4, top: 0),
-                          child: SizedBox(
-                            height: sH * .175,
-                            // decoration: BoxDecoration(border: Border.all()),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+              title: Container(
+                margin: EdgeInsets.only(top: sH * .015),
+                height: sH * .04,
+                child: Image.asset(
+                  'assets/images/benu_logo.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              centerTitle: true,
+            ),
+          ),
+          body: Stack(
+            children: [
+              Column(
+                children: [
+                  //welcome message
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInBack,
+                    child: AnimatedOpacity(
+                      opacity: _isWelcomeMessageVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 300),
+                      child: _isWelcomeMessageVisible
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                sW * .02,
+                                sH * .03,
+                                sW * .02,
+                                sH * .015,
+                              ),
                               child: Container(
+                                height: sH * .175,
                                 width: sW,
                                 decoration: BoxDecoration(
                                   color: const Color(0xff006769),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(sH * .02),
                                 ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       'Belum Nemu adalah aplikasi pencarian\nbarang hilang yang memudahkan anda\nuntuk menemukan benda berharga yang\nhilang',
                                       style: GoogleFonts.inter(
-                                          fontSize: 14,
+                                          fontSize: sH * .014,
                                           fontStyle: FontStyle.italic,
                                           color: Colors.white,
                                           letterSpacing: 1),
                                     ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 75.0),
-                                          child: GestureDetector(
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sW * .15),
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
                                             onTap: () {
                                               _hideWelcomeMessage();
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        sH * .01),
+                                              ),
                                               child: Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    EdgeInsets.all(sH * .008),
                                                 child: Text(
-                                                  'Oke',
+                                                  'OK',
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w900,
@@ -171,152 +147,95 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ),
-
-              //goods gallery generator
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SizedBox(
-                    child: GridView.builder(
-                      itemCount: 15,
-                      itemBuilder: (_, index) => const CardBarang(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: .75),
+                            )
+                          : const SizedBox.shrink(),
                     ),
                   ),
-                ),
-              ),
 
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-              ),
-            ],
-          ),
-
-          // report button
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () async {
-                      const phoneNumber = '6283836100924';
-                      const message = 'Halo, mau lapor nih saya nemuin barang.';
-                      final whatsAppLink =
-                          'http:/wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}';
-
-                      if (await canLaunchUrlString(whatsAppLink)) {
-                        await launchUrlString(whatsAppLink);
-                      } else {
-                        // Handle the error, like showing a snackbar or alert dialog
-                        log('Could not open WhatsApp.');
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: const Color(0xff25d366),
-                          borderRadius: BorderRadius.circular(100)),
-                      width: sW * .9,
-                      height: sH * .065,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/whatsapp_logo-removebg.png',
-                            color: Colors.white,
-                          ),
-                          Text(
-                            'Nemuin barang? Laporin disini',
-                            style: GoogleFonts.inter(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
+                  // goods gallery generator
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: sW * .02),
+                      child: SizedBox(
+                          child: GridView.builder(
+                        itemCount: 15,
+                        itemBuilder: (_, index) => CardBarang(
+                          sH: sH,
+                          sW: sW,
+                          onTap: () {
+                            _showDetailsModal(
+                              'Kamera Canon $index',
+                              'Ditemukan di toilet kantin $index',
+                              'assets/images/barang1.png',
+                            );
+                          },
+                          title: 'Kamera Canon $index',
+                          description: 'Ditemukan di toilet kantin $index',
+                          imagePath: 'assets/images/barang1.png',
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: sH * .02,
+                          crossAxisSpacing: sW * .02,
+                          childAspectRatio: sW / (sH * .6),
+                        ),
+                      )),
                     ),
                   ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CardBarang extends StatelessWidget {
-  const CardBarang({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      // height: 100,
-      child: Column(
-        children: [
-          Image.asset(
-            'assets/images/barang1.png',
-            fit: BoxFit.fill,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Kamera Canon',
-                style: GoogleFonts.inter(
-                    fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Ditemukan di toilet kantin',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                ),
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage(
-                        'assets/images/profile_image.png'), // Replace with your image asset path
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Icon(
-                        Icons.location_on,
-                        size: 45,
-                      ),
-                    ),
-                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
-      ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: const Color(0xff006769),
+            shape: const CircleBorder(),
+            onPressed: () {},
+            child: Icon(
+              size: sH * .045,
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: sH * .1,
+                  child: IconButton(
+                    onPressed: () {},
+                    iconSize: sH * .04,
+                    icon: const Icon(
+                      Icons.home,
+                    ),
+                    tooltip: 'Home',
+                    color: const Color(0xff006769),
+                  ),
+                ),
+                SizedBox(
+                  height: sH * .1,
+                  child: IconButton(
+                    onPressed: () {},
+                    iconSize: sH * .04,
+                    icon: const Icon(
+                      Icons.settings,
+                    ),
+                    tooltip: 'Home',
+                    color: const Color(0xff006769),
+                  ),
+                ),
+              ],
+            ),
+          )),
     );
   }
 }
