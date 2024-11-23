@@ -26,9 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showDetailsModal({
-    required String title,
-    required String description,
+    required String namaBarang,
     required String imagePath,
+    required String namaPenemu,
+    required String tanggalDitemukan,
+    required String lokasiDitemukan,
+    required String profilePicture,
+    required String detail,
     required double sH,
     required double sW,
   }) {
@@ -54,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    title,
+                    namaBarang,
                     style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -81,12 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Row(
                                 children: [
-                                  const CircleAvatar(),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage(profilePicture),
+                                  ),
                                   SizedBox(
                                     width: sW * .025,
                                   ),
                                   Text(
-                                    'Marsel Hendrayana',
+                                    namaPenemu,
                                     style: GoogleFonts.inter(
                                         fontSize: sH * .018,
                                         fontWeight: FontWeight.w500),
@@ -103,28 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     labelColor: AppColors.secondaryColor,
                                     labelText: 'Klaim'),
                               )
-                              // Container(
-                              //   height: sH * .04,
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.circular(sH * .02),
-                              //     color: AppColors.secondaryColor,
-                              //   ),
-                              //   child: FittedBox(
-                              //     fit: BoxFit.scaleDown,
-                              //     child: Padding(
-                              //       padding: EdgeInsets.symmetric(
-                              //           horizontal: sH * .02),
-                              //       child: Text(
-                              //         'Klaim',
-                              //         style: GoogleFonts.inter(
-                              //           fontSize: sH * .018,
-                              //           color: Colors.white,
-                              //           fontWeight: FontWeight.bold,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
 
@@ -150,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: sW * .01, vertical: sH * .01),
                                 child: Text(
-                                  '2024-01-01',
+                                  tanggalDitemukan,
                                   style: GoogleFonts.inter(fontSize: 16),
                                 ),
                               ),
@@ -169,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: sW * .01, vertical: sH * .01),
                                 child: Text(
-                                  'Disekitar tempat terakhir kita bersapa walau itu hanya kata perpisahan.',
+                                  lokasiDitemukan,
                                   style: GoogleFonts.inter(fontSize: 16),
                                 ),
                               ),
@@ -214,6 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double sH = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
+          backgroundColor: AppColors.background,
           appBar: PreferredSize(
             preferredSize:
                 Size.fromHeight(sH * .075), // Adjust the height as needed
@@ -257,27 +242,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                 sH * .015,
                               ),
                               child: Container(
-                                height: sH * .175,
+                                height: sW > 700 ? sH * .25 : sH * .175,
                                 width: sW,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xff006769),
+                                  color: AppColors.mainColor,
                                   borderRadius: BorderRadius.circular(sH * .02),
                                 ),
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       'Belum Nemu adalah aplikasi pencarian\nbarang hilang yang memudahkan anda\nuntuk menemukan benda berharga yang\nhilang',
                                       style: GoogleFonts.inter(
-                                          fontSize: sH * .014,
+                                          fontSize:
+                                              sW > 600 ? sH * .03 : sH * .014,
                                           fontStyle: FontStyle.italic,
                                           color: Colors.white,
                                           letterSpacing: 1),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: sW * .15),
+                                          horizontal:
+                                              sW > 700 ? sW * .3 : sW * .15),
                                       child: Row(
                                         children: [
                                           GestureDetector(
@@ -320,31 +308,52 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: sW * .02),
                       child: GridView.builder(
-                        itemCount: 15,
-                        itemBuilder: (_, index) => CardBarang(
-                          sH: sH,
-                          sW: sW,
-                          onTap: () {
-                            _showDetailsModal(
-                              sH: sH,
-                              sW: sW,
-                              title: 'Kamera Canon $index',
-                              description: 'Ditemukan di toilet kantin $index',
-                              imagePath: 'assets/images/barang1.png',
-                            );
-                          },
-                          title: 'Kamera $index',
-                          description: 'Ditemukan di toilet kantin $index',
-                          imagePath: 'assets/images/barang1.png',
-                        ),
+                        itemCount: 15, // Duplicates the single data
+                        itemBuilder: (_, index) {
+                          // Generate new values dynamically for some fields
+                          final String namaBarang =
+                              "${dummyData['nama_barang']} ";
+                          final String namaPenemu = dummyData['nama_penemu'];
+                          final String imagePath = dummyData['image_path'];
+                          final String lokasiDitemukan =
+                              dummyData['lokasi_ditemukan'];
+                          final String tanggalDitemukan =
+                              dummyData['tanggal_ditemukan'];
+                          final String profilePicture =
+                              dummyData['profile_picture'];
+                          final String detail =
+                              (dummyData['detail'] as List<dynamic>).join(', ');
+
+                          return CardBarang(
+                            sW: sW,
+                            sH: sH,
+                            namaBarang: namaBarang,
+                            namaPenemu: namaPenemu,
+                            imagePath: imagePath,
+                            detail: detail,
+                            lokasiDitemukan: lokasiDitemukan,
+                            tanggalDitemukan: tanggalDitemukan,
+                            profilePicture: profilePicture,
+                            onTap: () {
+                              _showDetailsModal(
+                                sH: sH,
+                                sW: sW,
+                                namaBarang: namaBarang,
+                                imagePath: imagePath,
+                                namaPenemu: namaPenemu,
+                                tanggalDitemukan: tanggalDitemukan,
+                                lokasiDitemukan: lokasiDitemukan,
+                                detail: detail,
+                                profilePicture: profilePicture,
+                              );
+                            },
+                          );
+                        },
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: sW > 600
-                              ? 3
-                              : 2, // Adjust columns based on screen width
+                          crossAxisCount: sW > 600 ? 3 : 2,
                           mainAxisSpacing: sH * .02,
                           crossAxisSpacing: sW * .02,
-                          childAspectRatio:
-                              0.8, // Adjust the aspect ratio of the grid item
+                          childAspectRatio: 0.8,
                         ),
                       ),
                     ),
@@ -356,42 +365,49 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color(0xff006769),
+            backgroundColor: AppColors.mainColor,
             shape: const CircleBorder(),
-            onPressed: () {},
+            onPressed: () {
+              log('Add Item');
+            },
             child: Icon(
-              size: sH * .045,
+              size: sW > 700 ? sH * .075 : sH * .04,
               Icons.add,
               color: Colors.white,
             ),
           ),
           bottomNavigationBar: BottomAppBar(
+            color: AppColors.backgroundAccent,
             shape: const CircularNotchedRectangle(),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
                   height: sH * .1,
                   child: IconButton(
-                    onPressed: () {},
-                    iconSize: sH * .04,
+                    onPressed: () {
+                      log('Home');
+                    },
+                    iconSize: sW > 700 ? sH * .075 : sH * .04,
                     icon: const Icon(
                       Icons.home,
                     ),
                     tooltip: 'Home',
-                    color: const Color(0xff006769),
+                    color: AppColors.mainColor,
                   ),
                 ),
                 SizedBox(
                   height: sH * .1,
                   child: IconButton(
-                    onPressed: () {},
-                    iconSize: sH * .04,
+                    onPressed: () {
+                      log('Setting');
+                    },
+                    iconSize: sW > 700 ? sH * .075 : sH * .04,
                     icon: const Icon(
                       Icons.settings,
                     ),
-                    tooltip: 'Home',
-                    color: const Color(0xff006769),
+                    tooltip: 'Setting',
+                    color: AppColors.mainColor,
                   ),
                 ),
               ],
@@ -401,19 +417,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-
-// Map<String, dynamic> data = {
-//   "nama_penemu": "Marsel Hendrayana",
-//   "profile_picture": "assets/images/profile_image.png",
-//   "tanggal_ditemukan": "22-11-2025",
-//   "lokasi_ditemukan":
-//       "Disekitar tempat terakhir kita bersapa walau itu hanya kata perpisahan.",
-//   "detail": [
-//     "Kamera Baru",
-//     "Jenis Canon XII",
-//     "Full Set dengan Tas",
-//     "Terdapat goresan pada mounting"
-//   ],
-//   "image": 'assets/images/barang1.png',
-// };
+final Map<String, dynamic> dummyData = {
+  "nama_penemu": "Marsel Hendrayana",
+  "nama_barang": "Kamera Canon",
+  "profile_picture": "assets/images/profile_image.png",
+  "tanggal_ditemukan": "01-01-2024",
+  "lokasi_ditemukan":
+      "Disekitar tempat terakhir kita bersapa walau itu hanya kata perpisahan.",
+  "detail": [
+    "Kamera Baru",
+    "Jenis Canon XII",
+    "Full Set dengan Tas",
+    "Terdapat goresan pada mounting"
+  ],
+  "image_path": 'assets/images/barang1.png',
+};

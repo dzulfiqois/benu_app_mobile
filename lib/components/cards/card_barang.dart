@@ -1,24 +1,33 @@
 import 'package:benu_app/components/misc/spacers.dart';
+import 'package:benu_app/constant/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CardBarang extends StatelessWidget {
+  final double sW;
+  final double sH;
+  final VoidCallback onTap;
+  final String namaBarang;
+  final String namaPenemu;
+  final String imagePath;
+  final String detail;
+  final String lokasiDitemukan;
+  final String tanggalDitemukan;
+  final String profilePicture;
+
   const CardBarang({
     super.key,
     required this.sW,
     required this.sH,
     required this.onTap,
-    required this.title,
-    required this.description,
+    required this.namaBarang,
+    required this.namaPenemu,
     required this.imagePath,
+    required this.detail,
+    required this.lokasiDitemukan,
+    required this.tanggalDitemukan,
+    required this.profilePicture,
   });
-
-  final double sW;
-  final double sH;
-  final VoidCallback onTap;
-  final String title;
-  final String description;
-  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +44,12 @@ class CardBarang extends StatelessWidget {
           padding: EdgeInsets.all(sH * .007),
           // Maintain a fixed aspect ratio for the card
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 240, 240, 240),
+            color: AppColors.backgroundAccent,
             borderRadius: BorderRadius.circular(sH * .015),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Image Section with proper aspect ratio
               AspectRatio(
@@ -50,40 +59,53 @@ class CardBarang extends StatelessWidget {
                   fit: BoxFit.cover, // Ensure the image fills the space
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: sH * .01),
-                child: Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    fontSize: sH * .016,
-                    fontWeight: FontWeight.bold,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: sH * .0),
+                    child: Text(
+                      namaBarang,
+                      style: GoogleFonts.inter(
+                        // crossAxisCount: sW > 600 ? 3: 2
+                        fontSize: sW > 700 ? sH * .03 : sH * .014,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  Text(
+                    detail,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(
+                      fontSize: sW > 700 ? sH * .03 : sH * .014,
+                    ),
+                  ),
+                  SizedBox(
+                    height: sH * .02,
+                  )
+                ],
               ),
-              Text(
-                description,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(
-                  fontSize: sH * .014,
-                ),
-              ),
-              Spacers(sH: sH * 0.01), // Spacer for visual separation
+              Spacers(sH: sH * 0.01),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: sW * .005),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: sH * .02,
-                      backgroundColor: Colors.purple,
+                    SizedBox(
+                      height: sW > 700 ? sH * .075 : sH * .04,
+                      width: sW > 700 ? sH * .075 : sH * .04,
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(profilePicture),
+                      ),
                     ),
                     Icon(
                       Icons.location_on_outlined,
-                      color: const Color(0xff006769),
-                      size: sH * .03,
+                      color: AppColors.mainColor,
+                      size: sW > 700 ? sH * .075 : sH * .03,
                     ),
                   ],
                 ),

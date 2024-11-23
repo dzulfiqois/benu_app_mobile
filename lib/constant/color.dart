@@ -19,8 +19,12 @@ class AppColors {
   static const Color textSecondary = Colors.black;
 
   // Utility Colors
+  // static const Color background = Color.fromARGB(245, 245, 245, 245);
   static const Color background = Color(0xfff5f5f5);
-  static const Color border = Color(0xffd9d9d9);
+  static const Color backgroundAccent = Color(0xfffffafa);
+  // // Utility Colors
+  // static const Color background = Color(0xfff5f5f5);
+  // static const Color border = Color(0xffd9d9d9);
 
   // Additional colors can be added here as needed
 }
