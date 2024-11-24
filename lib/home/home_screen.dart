@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   log('message');
+                                  _dialogKlaimBuilder(context);
                                 },
                                 child: Label(
                                     sH: sH,
@@ -192,6 +193,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _dialogKlaimBuilder(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext content) {
+          return AlertDialog(
+            title: Text(
+              "Klaim Barang Ini?",
+              style: GoogleFonts.inter(fontSize: 18),
+            ),
+            content: Text(
+              'Dengan ngeklik ya, kamu dianggap menjadi pemilik barang ini. Namun ketika bukan, akan kami proses secara hukum yang berlaku.',
+              style: GoogleFonts.inter(),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Disable'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Enable'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double sW = MediaQuery.of(context).size.width;
@@ -242,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 sH * .015,
                               ),
                               child: Container(
-                                height: sW > 700 ? sH * .25 : sH * .175,
+                                height: sW > 700 ? sH * .3 : sH * .2,
                                 width: sW,
                                 decoration: BoxDecoration(
                                   color: AppColors.mainColor,
@@ -253,19 +291,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'Belum Nemu adalah aplikasi pencarian\nbarang hilang yang memudahkan anda\nuntuk menemukan benda berharga yang\nhilang',
-                                      style: GoogleFonts.inter(
-                                          fontSize:
-                                              sW > 600 ? sH * .03 : sH * .014,
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.white,
-                                          letterSpacing: 1),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sW > 700 ? 8 : 24),
+                                      child: SizedBox(
+                                        width: sW > 700 ? sW * .75 : sW,
+                                        child: Text(
+                                          'Belum Nemu adalah aplikasi pencarian barang hilang yang memudahkan anda untuk menemukan benda berharga yang hilang',
+                                          style: GoogleFonts.inter(
+                                              fontSize: sW > 700
+                                                  ? sH * .04
+                                                  : sH * .02,
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.white,
+                                              letterSpacing: sW > 700 ? 1 : .5),
+                                        ),
+                                      ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal:
-                                              sW > 700 ? sW * .3 : sW * .15),
+                                              sW > 700 ? sW * .11 : sW * .06),
+                                      // horizontal:sW > 700 ? sW * .3 : sW * .15),
                                       child: Row(
                                         children: [
                                           GestureDetector(
@@ -273,24 +320,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                               _hideWelcomeMessage();
                                             },
                                             child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        sH * .01),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.all(sH * .008),
-                                                child: Text(
-                                                  'OK',
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w900,
-                                                  ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          sH * .01),
                                                 ),
-                                              ),
-                                            ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 40,
+                                                      vertical: 8),
+                                                  child: Text(
+                                                    'OK',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: sW > 700
+                                                          ? sH * .02
+                                                          : sH * .014,
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                    ),
+                                                  ),
+                                                )),
                                           ),
                                         ],
                                       ),

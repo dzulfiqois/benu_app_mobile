@@ -105,7 +105,7 @@ class CardBarang extends StatelessWidget {
                     Icon(
                       Icons.location_on_outlined,
                       color: AppColors.mainColor,
-                      size: sW > 700 ? sH * .075 : sH * .03,
+                      size: sW > 700 ? sH * .075 : sH * .04,
                     ),
                   ],
                 ),
