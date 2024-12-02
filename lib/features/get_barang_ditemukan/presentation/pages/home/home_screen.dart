@@ -27,18 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _klaim(BuildContext context) async {
+  Future<void> _klaim() async {
     var contactUrl = Uri.parse('https://wa.me/628817084832'); // Correct format
 
-    try {
-      if (!await launchUrl(contactUrl, mode: LaunchMode.externalApplication)) {
-        throw Exception('Could not launch the URL.');
-      }
-    } catch (e) {
-      // Show user-friendly error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal membuka WhatsApp: ${e.toString()}')),
-      );
+    if (!await launchUrl(contactUrl, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch the URL.');
     }
   }
 
@@ -240,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Text('Ya, Ini barang saya!'),
                 onPressed: () async {
                   Navigator.of(context).pop(); // Close the current screen
-                  await _klaim(context); // Await the async function
+                  await _klaim(); // Await the async function
                 },
               )
             ],
