@@ -1,4 +1,3 @@
-// import 'package:benu_app/components/misc/spacers.dart';
 import 'dart:developer';
 
 import 'package:benu_app/features/get_barang_ditemukan/presentation/provider/barang_ditemukan_provider.dart';
@@ -7,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:benu_app/constant/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// import 'package:benu_app/dummy/dataset.dart';
 import '../../../../../components/misc/label.dart';
 import '../../widgets/card_barang.dart';
 
@@ -26,6 +25,21 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _isWelcomeMessageVisible = false;
     });
+  }
+
+  Future<void> _klaim(BuildContext context) async {
+    var contactUrl = Uri.parse('https://wa.me/628817084832'); // Correct format
+
+    try {
+      if (!await launchUrl(contactUrl, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch the URL.');
+      }
+    } catch (e) {
+      // Show user-friendly error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal membuka WhatsApp: ${e.toString()}')),
+      );
+    }
   }
 
   void _showDetailsModal({
@@ -224,10 +238,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
                 child: const Text('Ya, Ini barang saya!'),
-                onPressed: () {
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  Navigator.of(context).pop(); // Close the current screen
+                  await _klaim(context); // Await the async function
                 },
-              ),
+              )
             ],
           );
         });
@@ -240,265 +255,260 @@ class _HomeScreenState extends State<HomeScreen> {
 
     double sW = MediaQuery.of(context).size.width;
     double sH = MediaQuery.of(context).size.height;
-    return Consumer<BarangDitemukanProvider>(
-      builder: (context, notifier, child) {
-        if (notifier.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        final barangDitemukans = notifier.barangDitemukans;
-
-        if (barangDitemukans == null || barangDitemukans.isEmpty) {
-          return const Center(
-            child: Text('No data available'),
-          );
-        }
-
-        return SafeArea(
-          child: Scaffold(
-              backgroundColor: AppColors.background,
-              appBar: PreferredSize(
-                preferredSize:
-                    Size.fromHeight(sH * .075), // Adjust the height as needed
-                child: AppBar(
-                  backgroundColor: AppColors.mainColor,
-                  elevation: 0,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
-                    ),
-                  ),
-                  title: Container(
-                    margin: EdgeInsets.only(top: sH * .015),
-                    height: sH * .04,
-                    child: Image.asset(
-                      'assets/images/benu_logo.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  centerTitle: true,
+    return SafeArea(
+      child: Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: PreferredSize(
+            preferredSize:
+                Size.fromHeight(sH * .075), // Adjust the height as needed
+            child: AppBar(
+              backgroundColor: AppColors.mainColor,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30.0),
+                  bottomRight: Radius.circular(30.0),
                 ),
               ),
-              body: Stack(
+              title: Container(
+                margin: EdgeInsets.only(top: sH * .015),
+                height: sH * .04,
+                child: Image.asset(
+                  'assets/images/benu_logo.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              centerTitle: true,
+            ),
+          ),
+          body: Stack(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      //welcome message
-                      AnimatedSize(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInBack,
-                        child: AnimatedOpacity(
-                          opacity: _isWelcomeMessageVisible ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 300),
-                          child: _isWelcomeMessageVisible
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    sW * .02,
-                                    sH * .03,
-                                    sW * .02,
-                                    sH * .015,
-                                  ),
-                                  child: Container(
-                                    height: sW > 700 ? sH * .3 : sH * .2,
-                                    width: sW,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.mainColor,
-                                      borderRadius:
-                                          BorderRadius.circular(sH * .02),
+                  //welcome message
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInBack,
+                    child: AnimatedOpacity(
+                      opacity: _isWelcomeMessageVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 300),
+                      child: _isWelcomeMessageVisible
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                sW * .02,
+                                sH * .03,
+                                sW * .02,
+                                sH * .015,
+                              ),
+                              child: Container(
+                                height: sW > 700 ? sH * .3 : sH * .2,
+                                width: sW,
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainColor,
+                                  borderRadius: BorderRadius.circular(sH * .02),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sW > 700 ? 8 : 24),
+                                      child: SizedBox(
+                                        width: sW > 700 ? sW * .75 : sW,
+                                        child: Text(
+                                          'Belum Nemu adalah aplikasi pencarian barang hilang yang memudahkan anda untuk menemukan benda berharga yang hilang',
+                                          style: GoogleFonts.inter(
+                                              fontSize: sW > 700
+                                                  ? sH * .04
+                                                  : sH * .02,
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.white,
+                                              letterSpacing: sW > 700 ? 1 : .5),
+                                        ),
+                                      ),
                                     ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: sW > 700 ? 8 : 24),
-                                          child: SizedBox(
-                                            width: sW > 700 ? sW * .75 : sW,
-                                            child: Text(
-                                              'Belum Nemu adalah aplikasi pencarian barang hilang yang memudahkan anda untuk menemukan benda berharga yang hilang',
-                                              style: GoogleFonts.inter(
-                                                  fontSize: sW > 700
-                                                      ? sH * .04
-                                                      : sH * .02,
-                                                  fontStyle: FontStyle.italic,
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              sW > 700 ? sW * .11 : sW * .06),
+                                      // horizontal:sW > 700 ? sW * .3 : sW * .15),
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              _hideWelcomeMessage();
+                                            },
+                                            child: Container(
+                                                decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  letterSpacing:
-                                                      sW > 700 ? 1 : .5),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: sW > 700
-                                                  ? sW * .11
-                                                  : sW * .06),
-                                          // horizontal:sW > 700 ? sW * .3 : sW * .15),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  _hideWelcomeMessage();
-                                                },
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              sH * .01),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          sH * .01),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 40,
+                                                      vertical: 8),
+                                                  child: Text(
+                                                    'OK',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: sW > 700
+                                                          ? sH * .02
+                                                          : sH * .014,
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                     ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 40,
-                                                          vertical: 8),
-                                                      child: Text(
-                                                        'OK',
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                          fontSize: sW > 700
-                                                              ? sH * .02
-                                                              : sH * .014,
-                                                          fontWeight:
-                                                              FontWeight.w900,
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ),
-                                            ],
+                                                  ),
+                                                )),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                        ),
-                      ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ),
 
-                      // goods gallery generator
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: sW * .02),
-                          child: GridView.builder(
-                            itemCount: barangDitemukans.length,
-                            itemBuilder: (_, index) {
-                              // Generate new values dynamically for some fields
-                              final String namaBarang =
-                                  "${barangDitemukans[index].namaBarang} ";
-                              final String namaPenemu =
-                                  barangDitemukans[index].namaPenemu;
-                              final String imagePath =
-                                  barangDitemukans[index].imagePath;
-                              final String lokasiDitemukan =
-                                  barangDitemukans[index].lokasiDitemukan;
-                              final String tanggalDitemukan =
-                                  barangDitemukans[index].tanggalDitemukan;
-                              final String profilePicture =
-                                  barangDitemukans[index].profilePicture;
-                              final String detail =
-                                  barangDitemukans[index].detail;
-                              // final String detail = (barangDitemukans[index]
-                              //         .detail as List<dynamic>)
-                              //     .join(', ');
+                  Consumer<BarangDitemukanProvider>(
+                      builder: (context, notifier, child) {
+                    if (notifier.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                              return CardBarang(
-                                sW: sW,
-                                sH: sH,
-                                namaBarang: namaBarang,
-                                namaPenemu: namaPenemu,
-                                imagePath: imagePath,
-                                detail: detail,
-                                lokasiDitemukan: lokasiDitemukan,
-                                tanggalDitemukan: tanggalDitemukan,
-                                profilePicture: profilePicture,
-                                onTap: () {
-                                  _showDetailsModal(
-                                    sH: sH,
-                                    sW: sW,
-                                    namaBarang: namaBarang,
-                                    imagePath: imagePath,
-                                    namaPenemu: namaPenemu,
-                                    tanggalDitemukan: tanggalDitemukan,
-                                    lokasiDitemukan: lokasiDitemukan,
-                                    detail: detail,
-                                    profilePicture: profilePicture,
-                                  );
-                                },
-                              );
-                            },
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: sW > 600 ? 3 : 2,
-                              mainAxisSpacing: sH * .02,
-                              crossAxisSpacing: sW * .02,
-                              childAspectRatio: 0.8,
-                            ),
+                    final barangDitemukans = notifier.barangDitemukans;
+
+                    if (barangDitemukans == null || barangDitemukans.isEmpty) {
+                      return const Center(
+                        child: Text('No data available'),
+                      );
+                    }
+
+                    // goods gallery generator
+
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: sW * .02),
+                        child: GridView.builder(
+                          itemCount: barangDitemukans.length,
+                          itemBuilder: (_, index) {
+                            // Generate new values dynamically for some fields
+                            final String namaBarang =
+                                "${barangDitemukans[index].namaBarang} ";
+                            final String namaPenemu =
+                                barangDitemukans[index].namaPenemu;
+                            final String imagePath =
+                                barangDitemukans[index].imagePath;
+                            final String lokasiDitemukan =
+                                barangDitemukans[index].lokasiDitemukan;
+                            final String tanggalDitemukan =
+                                barangDitemukans[index].tanggalDitemukan;
+                            final String profilePicture =
+                                barangDitemukans[index].profilePicture;
+                            final String detail =
+                                barangDitemukans[index].detail;
+                            // final String detail = (barangDitemukans[index]
+                            //         .detail as List<dynamic>)
+                            //     .join(', ');
+
+                            return CardBarang(
+                              sW: sW,
+                              sH: sH,
+                              namaBarang: namaBarang,
+                              namaPenemu: namaPenemu,
+                              imagePath: imagePath,
+                              detail: detail,
+                              lokasiDitemukan: lokasiDitemukan,
+                              tanggalDitemukan: tanggalDitemukan,
+                              profilePicture: profilePicture,
+                              onTap: () {
+                                _showDetailsModal(
+                                  sH: sH,
+                                  sW: sW,
+                                  namaBarang: namaBarang,
+                                  imagePath: imagePath,
+                                  namaPenemu: namaPenemu,
+                                  tanggalDitemukan: tanggalDitemukan,
+                                  lokasiDitemukan: lokasiDitemukan,
+                                  detail: detail,
+                                  profilePicture: profilePicture,
+                                );
+                              },
+                            );
+                          },
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: sW > 600 ? 3 : 2,
+                            mainAxisSpacing: sH * .02,
+                            crossAxisSpacing: sW * .02,
+                            childAspectRatio: 0.8,
                           ),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    );
+                  })
                 ],
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: AppColors.mainColor,
-                shape: const CircleBorder(),
-                onPressed: () {
-                  log('Add Item');
-                },
-                child: Icon(
-                  size: sW > 700 ? sH * .075 : sH * .04,
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-              bottomNavigationBar: BottomAppBar(
-                color: AppColors.backgroundAccent,
-                shape: const CircularNotchedRectangle(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: sH * .1,
-                      child: IconButton(
-                        onPressed: () {
-                          log('Home');
-                        },
-                        iconSize: sW > 700 ? sH * .075 : sH * .04,
-                        icon: const Icon(
-                          Icons.home,
-                        ),
-                        tooltip: 'Home',
-                        color: AppColors.mainColor,
-                      ),
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.mainColor,
+            shape: const CircleBorder(),
+            onPressed: () {
+              log('Add Item');
+            },
+            child: Icon(
+              size: sW > 700 ? sH * .075 : sH * .04,
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: AppColors.backgroundAccent,
+            shape: const CircularNotchedRectangle(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  height: sH * .1,
+                  child: IconButton(
+                    onPressed: () {
+                      log('Home');
+                    },
+                    iconSize: sW > 700 ? sH * .075 : sH * .04,
+                    icon: const Icon(
+                      Icons.home,
                     ),
-                    SizedBox(
-                      height: sH * .1,
-                      child: IconButton(
-                        onPressed: () {
-                          log('Setting');
-                        },
-                        iconSize: sW > 700 ? sH * .075 : sH * .04,
-                        icon: const Icon(
-                          Icons.settings,
-                        ),
-                        tooltip: 'Setting',
-                        color: AppColors.mainColor,
-                      ),
-                    ),
-                  ],
+                    tooltip: 'Home',
+                    color: AppColors.mainColor,
+                  ),
                 ),
-              )),
-        );
-      },
+                SizedBox(
+                  height: sH * .1,
+                  child: IconButton(
+                    onPressed: () {
+                      log('Setting');
+                    },
+                    iconSize: sW > 700 ? sH * .075 : sH * .04,
+                    icon: const Icon(
+                      Icons.settings,
+                    ),
+                    tooltip: 'Setting',
+                    color: AppColors.mainColor,
+                  ),
+                ),
+              ],
+            ),
+          )),
     );
   }
 }

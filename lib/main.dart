@@ -1,8 +1,20 @@
-import 'package:benu_app/home/home_screen.dart';
+import 'package:benu_app/features/get_barang_ditemukan/presentation/provider/barang_ditemukan_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'features/get_barang_ditemukan/presentation/pages/home/home_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => BarangDitemukanProvider(),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
