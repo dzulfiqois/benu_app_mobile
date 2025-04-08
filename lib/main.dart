@@ -1,8 +1,13 @@
-import 'package:benu_app/features/get_barang_ditemukan/presentation/provider/barang_ditemukan_provider.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/data/sources/network/network.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/presentation/provider/barang_ditemukan_provider.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/presentation/provider/post_barang_ditemukan_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/get_barang_ditemukan/presentation/pages/home/home_screen.dart';
+import 'features/barang_ditemukan/get_barang_ditemukan/data/repositories/barang_ditemukan_repository_implementation.dart';
+import 'features/barang_ditemukan/get_barang_ditemukan/domain/usecase/post_barang_ditemukan.dart';
+import 'features/barang_ditemukan/get_barang_ditemukan/presentation/pages/home/home_screen.dart';
 
 void main() {
   runApp(
@@ -11,6 +16,13 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => BarangDitemukanProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => PostBarangDitemukanProvider(
+            PostBarangDitemukan(BarangDitemukanRepositoryImplementation(
+                barangDitemukanRemoteDatasource:
+                    BarangDitemukanRemoteDatasourceImpl(dio: Dio()))),
+          ),
+        )
       ],
       child: const MainApp(),
     ),

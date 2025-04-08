@@ -2,16 +2,17 @@
 
 import 'dart:developer';
 
-import 'package:benu_app/features/get_barang_ditemukan/data/repositories/barang_ditemukan_repository_implementation.dart';
-import 'package:benu_app/features/get_barang_ditemukan/data/sources/network/network.dart';
-import 'package:benu_app/features/get_barang_ditemukan/domain/usecase/get_barang_ditemukan.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/data/repositories/barang_ditemukan_repository_implementation.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/data/sources/network/network.dart';
+import 'package:benu_app/features/barang_ditemukan/get_barang_ditemukan/domain/usecase/get_barang_ditemukan.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // fetch from network sourcFe
-  final datasourceId = BarangDitemukanRemoteDatasourceImpl();
+  final datasourceId = BarangDitemukanRemoteDatasourceImpl(dio: Dio());
   //injecting into domain.repository
   final repository = BarangDitemukanRepositoryImplementation(
       barangDitemukanRemoteDatasource: datasourceId);
