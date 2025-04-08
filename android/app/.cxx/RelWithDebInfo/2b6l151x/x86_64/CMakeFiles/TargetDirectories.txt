@@ -1,0 +1,2 @@
+C:/Users/LENOVO/Documents/Qois Baru/LJ/Learning/WPPL/BemuApp/bemu_app/android/app/.cxx/RelWithDebInfo/2b6l151x/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/LENOVO/Documents/Qois Baru/LJ/Learning/WPPL/BemuApp/bemu_app/android/app/.cxx/RelWithDebInfo/2b6l151x/x86_64/CMakeFiles/rebuild_cache.dir
