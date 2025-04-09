@@ -32,7 +32,7 @@ class BarangDitemukanRepositoryImplementation
           .postBarangDitemukan(barangDitemukan);
       return Right(barangDitemukan);
     } catch (e) {
-      return Left(Failure(errorMessage: 'Failed to post data'));
+      return const Left(Failure(errorMessage: 'Failed to post data'));
     }
   }
 }

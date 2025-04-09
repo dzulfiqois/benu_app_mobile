@@ -1,0 +1,2 @@
+C:/Users/LENOVO/Documents/Qois Baru/LJ/SMT2/Design Pattern/benu_app_mobile/android/app/.cxx/Debug/3e65r2j3/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/LENOVO/Documents/Qois Baru/LJ/SMT2/Design Pattern/benu_app_mobile/android/app/.cxx/Debug/3e65r2j3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

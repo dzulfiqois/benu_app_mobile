@@ -61,7 +61,7 @@ class PostBarangDitemukanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitBarangDitemukan() async {
+  Future<bool> submitBarangDitemukan() async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -82,40 +82,70 @@ class PostBarangDitemukanProvider extends ChangeNotifier {
 
       log(barangDitemukanEntity.toString());
       log('Tanggal ditemukan during submission: $_tanggalDitemukan');
+
       final result = await postBarangDitemukan.post(barangDitemukanEntity);
 
-      result.fold(
+      return result.fold(
         (failure) {
           _errorMessage = failure.errorMessage;
           log('Failed to submit barang ditemukan: $_errorMessage');
+          return false;
         },
         (barang) {
           log('Successfully submitted barang ditemukan');
+          return true;
         },
       );
     } catch (e) {
       _errorMessage = 'Unexpected error occurred: $e';
+      log(_errorMessage!);
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+
+  // Future<void> submitBarangDitemukan() async {
+  //   _isLoading = true;
+  //   _errorMessage = null;
+  //   notifyListeners();
+
+  //   try {
+  //     // Create the entity with data
+  //     final barangDitemukanEntity = BarangDitemukanEntity(
+  //       id: DateTime.now().millisecondsSinceEpoch.toString(),
+  //       namaBarang: _namaBarang,
+  //       namaPenemu: _namaPenemu,
+  //       tanggalDitemukan: _tanggalDitemukan, // Pass the String value
+  //       lokasiDitemukan: _lokasiDitemukan,
+  //       detail: _detail,
+  //       imagePath: _gambarBarang,
+  //       profilePicture: 'profile picture', // placeholder
+  //       createdAt: DateTime.now().toIso8601String(),
+  //     );
+
+  //     log(barangDitemukanEntity.toString());
+  //     log('Tanggal ditemukan during submission: $_tanggalDitemukan');
+  //     final result = await postBarangDitemukan.post(barangDitemukanEntity);
+
+  //     result.fold(
+  //       (failure) {
+  //         _errorMessage = failure.errorMessage;
+  //         log('Failed to submit barang ditemukan: $_errorMessage');
+  //       },
+  //       (barang) {
+  //         log('Successfully submitted barang ditemukan');
+  //       },
+  //     );
+  //   } catch (e) {
+  //     _errorMessage = 'Unexpected error occurred: $e';
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import 'dart:developer';
 

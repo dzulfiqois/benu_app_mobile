@@ -117,6 +117,7 @@ class CardBarang extends StatelessWidget {
 
   /// Helper method to build the image widget
   Widget _buildImage(String path) {
+
     // Check if `path` is Base64 encoded
     final isBase64 = RegExp(r'^[A-Za-z0-9+/]+={0,2}$').hasMatch(path);
 
@@ -128,11 +129,11 @@ class CardBarang extends StatelessWidget {
           decodedBytes,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return  Icon(Icons.broken_image, size: 50);
+            return const Icon(Icons.broken_image, size: 50);
           },
         );
       } catch (e) {
-        return  Icon(Icons.broken_image, size: 50);
+        return const Icon(Icons.broken_image, size: 50);
       }
     } else {
       // Assume it's a URL and display it
@@ -140,7 +141,7 @@ class CardBarang extends StatelessWidget {
         path,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return  Icon(Icons.broken_image, size: 50);
+          return const Icon(Icons.broken_image, size: 50);
         },
       );
     }

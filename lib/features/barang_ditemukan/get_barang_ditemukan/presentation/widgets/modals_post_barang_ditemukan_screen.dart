@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../constant/color.dart';
+import '../../../../../core/dialog_service.dart' show DialogService;
 
 class ModalsPostBarangDitemukanScreen extends StatefulWidget {
   final String namaBarang;
@@ -51,7 +52,7 @@ class _ModalsPostBarangDitemukanScreenState
       TextEditingController();
 
   File? _pickedImage;
-  String? _imageBase64;
+  // String? _imageBase64;
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -73,31 +74,31 @@ class _ModalsPostBarangDitemukanScreenState
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    try {
-      final XFile? image =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        final File file = File(image.path);
-        final bytes = await file.readAsBytes();
-        setState(() {
-          _pickedImage = file;
-          _imageBase64 = base64Encode(bytes);
-        });
-        log('Image picked and converted to base64');
-      }
-    } catch (e) {
-      log('Error picking image: $e');
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final XFile? image =
+  //         await _imagePicker.pickImage(source: ImageSource.gallery);
+  //     if (image != null) {
+  //       final File file = File(image.path);
+  //       final bytes = await file.readAsBytes();
+  //       setState(() {
+  //         _pickedImage = file;
+  //         // _imageBase64 = base64Encode(bytes);
+  //       });
+  //       log('Image picked and converted to base64');
+  //     }
+  //   } catch (e) {
+  //     log('Error picking image: $e');
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal mengambil gambar. Coba lagi.'),
-          ),
-        );
-      }
-    }
-  }
+  //     if (context.mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('Gagal mengambil gambar. Coba lagi.'),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   Future<void> _selectTanggalDitemukan() async {
     DateTime? picker = await showDatePicker(
@@ -114,7 +115,11 @@ class _ModalsPostBarangDitemukanScreenState
       // Update the TextField's controller
       _tanggalDitemukanController.text = formattedDate;
 
-      // Notify the provider
+      // Notify the provider, but will checking whether the widget is mounted or not.
+      if (!mounted) {
+        return;
+      }
+
       context.read<PostBarangDitemukanProvider>().setTanggalDitemukan(picker);
     }
   }
@@ -362,7 +367,6 @@ class _ModalsPostBarangDitemukanScreenState
                           'Tanggal Ditemukan',
                           style: GoogleFonts.inter(
                             fontSize: widget.sH * .016,
-                            // fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(
@@ -459,19 +463,45 @@ class _ModalsPostBarangDitemukanScreenState
                     height: widget.sH * .03,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       log('Submit button pressed');
+
                       final notifier = Provider.of<PostBarangDitemukanProvider>(
                           context,
                           listen: false);
+                      final dialogService = DialogService.instance;
+
                       if (notifier.namaBarang.isEmpty ||
                           notifier.namaPenemu.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Pastikan semua kolom terisi.')),
-                        );
+                        dialogService.showSnackbar(
+                            context, 'Pastikan semua kolom terisi.');
+                        return;
+                      }
+
+                      final isConfirmed =
+                          await dialogService.showConfirmationDialog(
+                        context,
+                        'Apakah kamu yakin ingin melaporkan barang ini?',
+                      );
+
+                      if (!isConfirmed) return;
+
+                      final isSuccess = await notifier.submitBarangDitemukan();
+
+                      if (!mounted) {
+                        return;
+                      }
+
+                      if (isSuccess) {
+                        dialogService.showSnackbar(
+                            context, 'Barang berhasil dilaporkan!');
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil(
+                              (route) => route.isFirst); // back to Home
+                        }
                       } else {
-                        notifier.submitBarangDitemukan();
+                        dialogService.showSnackbar(
+                            context, 'Gagal melaporkan barang. Coba lagi.');
                       }
                     },
                     style: ElevatedButton.styleFrom(
